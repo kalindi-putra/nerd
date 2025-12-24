@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package event;
+option go_package = "pkg/api;api";
+
+service EventService {
+  rpc IngestEvent(EventRequest) returns (EventResponse);
+  rpc GetStatus (StatusRequest) returns (StatusResponse);
+
+}
+
+
+
+message EventRequest {
+  string event_id = 1;
+  string payload = 2;
+  int64 timestamp = 3;
+}
+
+message EventResponse {
+  bool accepted = 1;
+  string message = 2;
+  string job_id=3;
+}
+
+message StatusRequest {
+  string job_id = 1;
+}
+
+message StatusResponse {
+  string status = 1;
+}
+

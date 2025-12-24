@@ -1,1 +1,1 @@
-# nerd
+This is repo for my learning on GO project and its different aspects on programing paradigm.

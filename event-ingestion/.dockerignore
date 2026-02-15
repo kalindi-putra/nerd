@@ -1,0 +1,26 @@
+# Ignore the vendor directory if it exists
+vendor/
+
+# Ignore the build artifacts
+*.exe
+*.out
+*.test
+
+# Ignore the local development files
+*.log
+*.tmp
+
+# Ignore the IDE and editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignore any other files that are not needed in the container
+README.md
+deploy/README.md

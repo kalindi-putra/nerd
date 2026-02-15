@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	api "event-ingestion/pkg/api"
@@ -11,8 +12,16 @@ import (
 )
 
 func main() {
+	// Get server address from environment variable or use default
+	serverAddr := os.Getenv("SERVER_ADDRESS")
+	if serverAddr == "" {
+		serverAddr = "localhost:50051"
+	}
+
+	log.Printf("Connecting to server at: %s", serverAddr)
+
 	conn, err := grpc.Dial(
-		"localhost:50051",
+		serverAddr,
 		grpc.WithInsecure(), // for local dev
 	)
 	if err != nil {

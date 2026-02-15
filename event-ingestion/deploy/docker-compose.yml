@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  event-server:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: event-server
+    ports:
+      - "50051:50051"
+    networks:
+      - event-network
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr=:50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  event-worker:
+    build:
+      context: ..
+      dockerfile: Dockerfile.worker
+    container_name: event-worker
+    environment:
+      - SERVER_ADDRESS=event-server:50051
+    networks:
+      - event-network
+    depends_on:
+      event-server:
+        condition: service_started
+    restart: unless-stopped
+
+networks:
+  event-network:
+    driver: bridge

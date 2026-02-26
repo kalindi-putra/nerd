@@ -35,6 +35,8 @@ The application consists of two components:
 
 1. **Event Server**: A gRPC server that receives event ingestion requests and provides job status
 2. **Event Worker**: A client that sends events to the server and polls for job completion
+3. **PostgreSQL**: Persistent storage for events and statuses
+4. **Redis**: Fast cache for status lookups
 
 ## Quick Start
 
@@ -55,6 +57,8 @@ This command will:
 - Create a Docker network for inter-container communication
 - Start the server on port 50051
 - Start the worker which connects to the server
+- Start PostgreSQL on port 5432
+- Start Redis on port 6379
 
 ### 3. View logs
 
@@ -112,6 +116,15 @@ docker run -d \
 ## Configuration
 
 ### Environment Variables
+
+#### Server Configuration
+
+- `REDIS_ADDR`: Redis endpoint (set to `redis:6379` in compose)
+- `POSTGRES_HOST`: PostgreSQL host (set to `postgres` in compose)
+- `POSTGRES_PORT`: PostgreSQL port (set to `5432`)
+- `POSTGRES_USER`: PostgreSQL user (set to `postgres`)
+- `POSTGRES_PASSWORD`: PostgreSQL password (set to `postgres`)
+- `POSTGRES_DB`: PostgreSQL database name (set to `event_ingestion`)
 
 #### Worker Configuration
 

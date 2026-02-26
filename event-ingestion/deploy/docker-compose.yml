@@ -6,10 +6,22 @@ services:
       context: ..
       dockerfile: Dockerfile
     container_name: event-server
+    environment:
+      - REDIS_ADDR=redis:6379
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=event_ingestion
     ports:
       - "50051:50051"
     networks:
       - event-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr=:50051"]
       interval: 10s
@@ -32,6 +44,45 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  postgres:
+    image: postgres:16-alpine
+    container_name: event-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=event_ingestion
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d event_ingestion"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - event-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: event-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - event-network
+    restart: unless-stopped
+
 networks:
   event-network:
     driver: bridge
+
+volumes:
+  postgres-data:

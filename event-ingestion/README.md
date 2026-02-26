@@ -7,6 +7,8 @@ A high-performance event ingestion service built with Go and gRPC. The service p
 - **gRPC API**: High-performance protocol buffer-based communication
 - **Asynchronous Processing**: Events are queued and processed asynchronously
 - **Job Tracking**: Monitor the status of ingested events via job ID
+- **PostgreSQL Persistence**: Durable storage for event payloads and processing status
+- **Redis Status Cache**: Fast status lookups for active/recent jobs
 - **Containerized**: Full Docker and Docker Compose support
 - **Scalable**: Designed for horizontal scaling
 
@@ -16,6 +18,8 @@ The system consists of two main components:
 
 1. **Event Server**: Receives events via gRPC and processes them asynchronously
 2. **Event Worker/Client**: Sends events to the server and polls for completion
+3. **PostgreSQL**: Stores all events and status history
+4. **Redis**: Caches job status for low-latency status reads
 
 ## Prerequisites
 
@@ -72,6 +76,8 @@ This will:
 - Build the server and worker images
 - Start the gRPC server on port 50051
 - Start the worker client that sends test events
+- Start PostgreSQL on port 5432
+- Start Redis on port 6379
 
 ### Manual Docker Build
 
@@ -164,6 +170,15 @@ message StatusResponse {
 ## Configuration
 
 ### Environment Variables
+
+#### Server
+
+- `REDIS_ADDR`: Redis address (default: `localhost:6379`)
+- `POSTGRES_HOST`: PostgreSQL host (default: `localhost`)
+- `POSTGRES_PORT`: PostgreSQL port (default: `5432`)
+- `POSTGRES_USER`: PostgreSQL user (default: `postgres`)
+- `POSTGRES_PASSWORD`: PostgreSQL password (default: `postgres`)
+- `POSTGRES_DB`: PostgreSQL database name (default: `event_ingestion`)
 
 #### Worker/Client
 

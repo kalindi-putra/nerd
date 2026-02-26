@@ -6,6 +6,8 @@ require google.golang.org/grpc v1.77.0
 
 require (
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
+	github.com/redis/go-redis/v9 v9.17.0 // indirect
 	golang.org/x/net v0.46.1-0.20251013234738-63d1a5100f82 // indirect
 	golang.org/x/sys v0.37.0 // indirect
 	golang.org/x/text v0.30.0 // indirect
